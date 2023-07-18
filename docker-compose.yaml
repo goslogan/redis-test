@@ -1,0 +1,211 @@
+---
+
+version: "3.8"
+
+services:
+
+  redis72-stack:
+    image: redis/redis-stack-server:7.2.0-RC3
+    ports:
+      - ${REDIS_PORT}:6379
+    entrypoint:
+      - /opt/redis-stack/bin/redis-stack-server
+      - --protected-mode no
+      - --enable-module-command yes
+      - --enable-debug-command yes
+    profiles:
+      - redis72
+      - standalone
+      - all
+
+  redis70-stack:
+    image: redis/redis-stack-server:7.0.6-RC9
+    ports:
+      - ${REDIS_PORT}:6379
+    entrypoint:
+      - /opt/redis-stack/bin/redis-stack-server
+      - --protected-mode no
+      - --enable-module-command yes
+      - --enable-debug-command yes
+    profiles:
+      - redis70
+      - standalone
+      - all
+
+  redis62-stack:
+    image: redis/redis-stack-server:6.2.6-v9  
+    ports:
+      - ${REDIS_PORT}:6379
+    entrypoint:
+      - /opt/redis-stack/bin/redis-stack-server
+      - --protected-mode no
+    profiles:
+      - redis62
+      - standalone
+      - all
+
+  redis62-sentinel:     
+    build:
+      context: .
+      dockerfile: Dockerfile.62.sentinel
+    entrypoint: 
+      - /create_sentinels.sh
+      - ${REDIS_SENTINEL_MASTER_PORT}
+    ports:
+     - ${REDIS_SENTINEL_MASTER_PORT}:${REDIS_SENTINEL_MASTER_PORT}
+     - ${REDIS_SENTINEL_REPLICA_1_PORT}:${REDIS_SENTINEL_REPLICA_1_PORT}
+     - ${REDIS_SENTINEL_REPLICA_2_PORT}:${REDIS_SENTINEL_REPLICA_2_PORT}
+     - ${REDIS_SENTINEL_1_PORT}:${REDIS_SENTINEL_1_PORT}
+     - ${REDIS_SENTINEL_2_PORT}:${REDIS_SENTINEL_2_PORT}
+     - ${REDIS_SENTINEL_3_PORT}:${REDIS_SENTINEL_3_PORT}
+    profiles:
+      - redis62
+      - sentinel
+      - all
+
+  redis70-sentinel:     
+    build:
+      context: .
+      dockerfile: Dockerfile.70.sentinel
+    entrypoint: 
+      - /create_sentinels.sh
+      - ${REDIS_SENTINEL_MASTER_PORT}
+      - yes
+    ports:
+     - ${REDIS_SENTINEL_MASTER_PORT}:${REDIS_SENTINEL_MASTER_PORT}
+     - ${REDIS_SENTINEL_REPLICA_1_PORT}:${REDIS_SENTINEL_REPLICA_1_PORT}
+     - ${REDIS_SENTINEL_REPLICA_2_PORT}:${REDIS_SENTINEL_REPLICA_2_PORT}
+     - ${REDIS_SENTINEL_1_PORT}:${REDIS_SENTINEL_1_PORT}
+     - ${REDIS_SENTINEL_2_PORT}:${REDIS_SENTINEL_2_PORT}
+     - ${REDIS_SENTINEL_3_PORT}:${REDIS_SENTINEL_3_PORT}
+    profiles:
+      - redis70
+      - sentinel
+      - all
+
+  redis72-sentinel:     
+    build:
+      context: .
+      dockerfile: Dockerfile.72.sentinel
+    entrypoint: 
+      - /create_sentinels.sh
+      - ${REDIS_SENTINEL_MASTER_PORT}
+      - yes
+    ports:
+     - ${REDIS_SENTINEL_MASTER_PORT}:${REDIS_SENTINEL_MASTER_PORT}
+     - ${REDIS_SENTINEL_REPLICA_1_PORT}:${REDIS_SENTINEL_REPLICA_1_PORT}
+     - ${REDIS_SENTINEL_REPLICA_2_PORT}:${REDIS_SENTINEL_REPLICA_2_PORT}
+     - ${REDIS_SENTINEL_1_PORT}:${REDIS_SENTINEL_1_PORT}
+     - ${REDIS_SENTINEL_2_PORT}:${REDIS_SENTINEL_2_PORT}
+     - ${REDIS_SENTINEL_3_PORT}:${REDIS_SENTINEL_3_PORT}
+    profiles:
+      - redis72
+      - sentinel
+      - all
+
+  redis72-cluster:     
+    build:
+      context: .
+      dockerfile: Dockerfile.72.cluster
+    entrypoint: 
+      - /create_cluster.sh
+      - ${REDIS_CLUSTER_PORT_1}
+      - yes
+    ports:
+     - ${REDIS_CLUSTER_PORT_1}:${REDIS_CLUSTER_PORT_1}
+     - ${REDIS_CLUSTER_PORT_2}:${REDIS_CLUSTER_PORT_2}
+     - ${REDIS_CLUSTER_PORT_3}:${REDIS_CLUSTER_PORT_3}
+     - ${REDIS_CLUSTER_PORT_4}:${REDIS_CLUSTER_PORT_4}
+     - ${REDIS_CLUSTER_PORT_5}:${REDIS_CLUSTER_PORT_5}
+     - ${REDIS_CLUSTER_PORT_6}:${REDIS_CLUSTER_PORT_6}
+    profiles:
+      - redis72
+      - cluster
+      - all
+
+  redis70-cluster:     
+    build:
+      context: .
+      dockerfile: Dockerfile.70.cluster
+    entrypoint: 
+      - /create_cluster.sh
+      - ${REDIS_CLUSTER_PORT_1}
+      - yes
+    ports:
+     - ${REDIS_CLUSTER_PORT_1}:${REDIS_CLUSTER_PORT_1}
+     - ${REDIS_CLUSTER_PORT_2}:${REDIS_CLUSTER_PORT_2}
+     - ${REDIS_CLUSTER_PORT_3}:${REDIS_CLUSTER_PORT_3}
+     - ${REDIS_CLUSTER_PORT_4}:${REDIS_CLUSTER_PORT_4}
+     - ${REDIS_CLUSTER_PORT_5}:${REDIS_CLUSTER_PORT_5}
+     - ${REDIS_CLUSTER_PORT_6}:${REDIS_CLUSTER_PORT_6}
+    profiles:
+      - redis70
+      - cluster
+      - all
+
+  redis62-cluster:     
+    build:
+      context: .
+      dockerfile: Dockerfile.62.cluster
+    entrypoint: 
+      - /create_cluster.sh
+      - ${REDIS_CLUSTER_PORT_1}
+    ports:
+     - ${REDIS_CLUSTER_PORT_1}:${REDIS_CLUSTER_PORT_1}
+     - ${REDIS_CLUSTER_PORT_2}:${REDIS_CLUSTER_PORT_2}
+     - ${REDIS_CLUSTER_PORT_3}:${REDIS_CLUSTER_PORT_3}
+     - ${REDIS_CLUSTER_PORT_4}:${REDIS_CLUSTER_PORT_4}
+     - ${REDIS_CLUSTER_PORT_5}:${REDIS_CLUSTER_PORT_5}
+     - ${REDIS_CLUSTER_PORT_6}:${REDIS_CLUSTER_PORT_6}
+    profiles:
+      - redis62
+      - cluster
+      - all
+
+  redis62-ring:     
+    build:
+      context: .
+      dockerfile: Dockerfile.62.ring
+    entrypoint: 
+      - /create_ring.sh
+      - ${REDIS_RING_PORT_1}
+    ports:
+     - ${REDIS_RING_PORT_1}:${REDIS_RING_PORT_1}
+     - ${REDIS_RING_PORT_2}:${REDIS_RING_PORT_2}
+     - ${REDIS_RING_PORT_3}:${REDIS_RING_PORT_3}
+    profiles:
+      - redis62
+      - ring
+      - all
+
+  redis70-ring:     
+    build:
+      context: .
+      dockerfile: Dockerfile.70.ring
+    entrypoint: 
+      - /create_ring.sh
+      - ${REDIS_RING_PORT_1}
+    ports:
+     - ${REDIS_RING_PORT_1}:${REDIS_RING_PORT_1}
+     - ${REDIS_RING_PORT_2}:${REDIS_RING_PORT_2}
+     - ${REDIS_RING_PORT_3}:${REDIS_RING_PORT_3}
+    profiles:
+      - redis70
+      - ring
+      - all
+
+  redis72-ring:     
+    build:
+      context: .
+      dockerfile: Dockerfile.72.ring
+    entrypoint: 
+      - /create_ring.sh
+      - ${REDIS_RING_PORT_1}
+    ports:
+     - ${REDIS_RING_PORT_1}:${REDIS_RING_PORT_1}
+     - ${REDIS_RING_PORT_2}:${REDIS_RING_PORT_2}
+     - ${REDIS_RING_PORT_3}:${REDIS_RING_PORT_3}
+    profiles:
+      - redis72
+      - ring
+      - all
