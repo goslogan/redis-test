@@ -1,4 +1,4 @@
-FROM redis/redis-stack-server:7.2.0-RC3
+FROM redis/redis-stack-server:latest
 
 COPY ring/create_ring.sh /create_ring.sh
 

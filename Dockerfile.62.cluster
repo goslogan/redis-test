@@ -1,4 +1,4 @@
-FROM redis/redis-stack-server:6.2.6-v9
+FROM redis/redis-stack-server:6.2.6-v12
 
 COPY cluster/create_cluster.sh /create_cluster.sh
 
